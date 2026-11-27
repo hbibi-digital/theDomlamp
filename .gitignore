@@ -2,3 +2,5 @@ build/
 .pio/
 *.o
 .DS_Store
+.env
+.env.*
