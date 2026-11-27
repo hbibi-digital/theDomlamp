@@ -38,6 +38,26 @@ The firmware ends up in `build/<omgeving>.bin`. That directory is in `.gitignore
 
 ## Flashing
 
+### Without building it yourself
+
+Every release of theDomlamp carries two ready-made files for the Seeed Studio XIAO ESP32-C3 (`release.sh`
+makes them):
+
+- `theDomlamp-<version>-xiao-esp32c3-factory.bin`: bootloader, partition table and firmware in one file, for
+  the first time. Flash it at address `0x0`:
+  - in the browser (Chrome or Edge), with the board on USB: <https://espressif.github.io/esptool-js/>,
+    connect, address `0x0`, choose the file, *Program*;
+  - or with esptool: `esptool.py --chip esp32c3 write_flash 0x0 theDomlamp-<version>-xiao-esp32c3-factory.bin`.
+
+  If the board does not show up, hold the BOOT button while you plug in the USB cable.
+- `theDomlamp-<version>-xiao-esp32c3-update.bin`: the firmware alone, for a lamp that already runs. In WLED go
+  to *Config → Security & Updates → Manual OTA Update* and choose the file; the settings stay.
+
+Check a downloaded file with `shasum -a 256` against `SHA256SUMS.txt` from the same release. The firmware's
+version is on the lamp's info page under "Dom firmware".
+
+### From source
+
 - **First time, via USB:** `./build.sh domlamp_esp32 -t upload --upload-port /dev/cu.usbserial-XXXX`.
   That also writes the bootloader and the partition table.
 - **After that, or on a board that already has WLED on it:** in WLED go to *Config → Security & Updates → Manual OTA Update* and choose `build/domlamp_esp32.bin`.

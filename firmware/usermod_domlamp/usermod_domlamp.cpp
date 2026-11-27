@@ -17,6 +17,9 @@
 
 #define LINK_FADE_MS 120               // between two frames of the link (the browser sends at most every 70 ms)
 #define LINK_HOLD_MS 12000             // back to the tower this long after the last frame (as lamplink.js HOLD_S)
+#ifndef DOMLAMP_VERSION
+#define DOMLAMP_VERSION "dev"           // set by the build (platformio_override.ini)
+#endif
 #ifndef DOMLAMP_URL
 #define DOMLAMP_URL "https://utrechtdom.city/api/licht"
 #endif
@@ -462,6 +465,7 @@ class DomlampUsermod : public Usermod {
       link += F(" connects)");
       addInfoRow(user, F("Dom link code"), link);
     }
+    addInfoRow(user, F("Dom firmware"), F(DOMLAMP_VERSION));
     if (everTried && lastStackFree) {
       String stack = String(lastStackFree);
       stack += F(" B unused");
