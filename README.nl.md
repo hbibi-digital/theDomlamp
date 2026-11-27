@@ -12,13 +12,13 @@ De toren zelf, live en in 3D, staat op [utrechtdom.city](https://utrechtdom.city
 | Map | Wat | Staat | Licentie |
 | --- | --- | --- | --- |
 | [`firmware/`](firmware/) | WLED 16 met de usermod `domlamp`: haalt het lichtplan op en zet de zeven zones van de lamp. | Draait op twee ESP32-C3-borden. | EUPL 1.2 |
-| [`hardware/`](hardware/) | Printbestanden, onderdelenlijst en bouwplan. | Volgt. Het ontwerp (mk2) is getekend, nog niet geprint. | CC BY-NC-SA 4.0 |
+| [`hardware/`](hardware/) | Het ontwerp van de lamp. [mk1](hardware/mk1/): printbestanden (STL) van een ontwerp in ontwikkeling, geprint maar nooit afgebouwd zoals getekend. mk2: getekend, nog niet geprint. | Nog geen bouwplan. | CC BY-NC-SA 4.0 |
 
 ## Zelf bouwen
 
-Nu kan alleen de firmware: zie [`firmware/README.md`](firmware/README.md) voor bouwen, flashen en de
+De firmware is klaar voor gebruik: zie [`firmware/README.md`](firmware/README.md) voor bouwen, flashen en de
 instellingen. Je hebt een ESP32 of ESP32-C3 nodig en een ledstrip met RGBW-leds (SK6812). De printbestanden
-komen in `hardware/` zodra een proefprint is gelukt.
+van mk1 staan in [`hardware/mk1/`](hardware/mk1/), zonder bouwplan; die van mk2 volgen na een geslaagde proefprint.
 
 ## Licenties, kort
 
