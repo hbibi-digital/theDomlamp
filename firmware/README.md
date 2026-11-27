@@ -1,4 +1,4 @@
-# Firmware van de Domlamp
+# Firmware van theDomlamp
 
 De lamp draait gewone WLED 16.0.1 met één eigen usermod: `domlamp`.
 De usermod haalt elke minuut het lichtplan op (`https://utrechtdom.city/api/licht`) en zet de zeven zones van de lamp.
@@ -82,7 +82,7 @@ De volgorde omhoog/omlaag is een aanname. Loopt jouw strip anders, verwissel dan
 
 ## Instellingen van de usermod
 
-*Config → Usermods → Domlamp.*
+*Config → Usermods → Domlamp.* (de usermod heet in de instellingen en in de JSON-API nog `Domlamp`; hernoemen zou bestaande lampen en presets breken)
 
 | Veld | Standaard | Betekenis |
 | --- | --- | --- |
@@ -179,9 +179,9 @@ Onder *Info* in WLED:
 | Bouw | Flash gebruikt | Vrij | RAM (statisch) |
 | --- | --- | --- | --- |
 | WLED kaal, ESP32 (`esp32dev`) | 1 297 849 (82,5 %) | 275 015 | 81 552 |
-| Domlamp, ESP32 | 1 407 089 (89,5 %) | 165 775 | 85 632 |
+| theDomlamp, ESP32 | 1 407 089 (89,5 %) | 165 775 | 85 632 |
 | WLED kaal, ESP32-C3 (`esp32c3dev`) | 1 264 840 (80,4 %) | 308 024 | 71 768 |
-| Domlamp, ESP32-C3 | 1 375 494 (87,5 %) | 197 370 | 75 848 |
+| theDomlamp, ESP32-C3 | 1 375 494 (87,5 %) | 197 370 | 75 848 |
 
 De usermod met TLS kost dus ongeveer 110 kB flash en 4 kB vast RAM.
 "RAM" is hier wat de linker vastlegt, niet het vrije geheugen op een draaiende lamp. Dat is niet gemeten.
@@ -228,8 +228,8 @@ Alles wat een ESP32 nodig heeft:
 
 ## Eigen naam en uiterlijk
 
-- **In de build** (`platformio_override.ini`): merk "Domlamp", product "Domtoren", adres `domlamp.local`, en
-  een instelnetwerk met eigen naam per lamp (`Domlamp-` plus de laatste zes tekens van het serienummer).
+- **In de build** (`platformio_override.ini`): merk "theDomlamp", product "Domtoren", adres `thedomlamp.local`, en
+  een instelnetwerk met eigen naam per lamp (`theDomlamp-` plus de laatste zes tekens van het serienummer).
 - **Op de lamp** (`ui/install.sh <adres>`): `skin.css` met de kleuren van de site voor WLED's eigen pagina's,
   en vier presets: Volg de Domtoren, Warm wit, Oranje, Uit. Het script overschrijft de presets op de lamp.
 - Niet aangepast: het WLED-logo, de welkomstpagina en de menu's. Dat vraagt wijzigingen in WLED zelf.
