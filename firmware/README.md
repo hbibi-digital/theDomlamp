@@ -190,7 +190,7 @@ The usermod with TLS therefore costs about 110 kB of flash and 4 kB of fixed RAM
 
 ## Tested
 
-**On the Mac (`test/run.sh`, 514 checks, with AddressSanitizer and UBSan):**
+**On the Mac (`test/run.sh`, 530 checks, with AddressSanitizer and UBSan):**
 
 - reading the plan, including the real example and a real response from the server (chunked);
 - truncated and wrong responses: refused, no crash;
@@ -204,29 +204,35 @@ The usermod with TLS therefore costs about 110 kB of flash and 4 kB of fixed RAM
 
 **Checked separately on the Mac:** BearSSL (the regular version, not the copy in the library) connects to the real server and accepts the certificate with only these two roots. With another root it refuses.
 
-## Not tested
+**On a lamp (ESP32-C3, 52 pixels, 25 to 27 November 2026):**
 
-- **Linking via the server, more than one lamp and longer than five minutes:** measured on the second lamp (ESP32-C3)
-  on 26 November 2026. With the service on the Mac over http: 30 of 30 frames, post to visible
+- TLS on the chip: the plan comes in over https every minute, in 3 to 4 seconds. Of the 12 kB stack more
+  than 6 kB stays unused.
+- Free memory: 150 kB at rest, 111 kB with the link connection open over https (134 kB over http), and
+  every minute for a few seconds 57 to 62 kB while the plan is being fetched.
+- The default segments: on a clean lamp the firmware makes 14 segments for 52 pixels by itself.
+- Settings and info page: settings set through the JSON API; the info page shows the scene, the next
+  change, the last fetch and the link code.
+- Update over wifi: done three times, the lamp came back with its settings each time.
+- Following the plan: a changed plan was on the lamp within a minute (orange to warm white), read from the
+  info page.
+- Linking via the server: with the service in the local network over http 30 of 30 frames, post to visible
   median 48 ms (one read-out round is 47 ms, the real delay is below that). With the live service over
   https (Caddy, nginx): 40 of 40 frames, median 78 ms, slowest 151 ms, with a read-out round of 53 ms;
-  directly to the lamp in the same way 81 ms. Free memory: 150 kB without a connection, 134 kB with
-  http, 111 kB with https, and every minute for a few seconds 57 to 62 kB while the plan is being fetched.
-  The plan came through every time in five minutes. One restart seen, directly after saving a
-  setting via `/json/cfg` while the memory was at 58 kB; cause not determined. Not tested:
-  hours on end, a dropped connection, several lamps at once.
+  directly to the lamp measured the same way 81 ms. The plan came through every time during five minutes.
 
-Everything that needs an ESP32:
+## Not tested
 
-- whether the TLS connection succeeds on the chip, how long it takes and whether the stack (12 kB) is enough;
-- whether the light stutters during fetching, especially on the C3 with one core;
-- free memory on a running lamp;
-- the segments: colour, brightness, transitions, the candle on real pixels;
-- the default segments and the interaction with a boot preset;
-- settings, info page and the on/off button in the web page;
-- storing the plan and reading it back on the file system;
-- behaviour during an update over wifi;
-- the colours themselves (the RGBW values from the plan are still an assumption on the server as well).
+- whether the light stutters during fetching, especially on the C3 with one core (only numbers were read,
+  nobody looked at the lamp);
+- the candle on real pixels;
+- the colours themselves (the RGBW values from the plan are still an assumption on the server as well);
+- the on/off button in the lamp's web page;
+- storing the plan and reading it back on the file system, after a power cut;
+- the interaction with a boot preset;
+- a plain ESP32 (not the C3): only built, never flashed;
+- linking via the server: hours on end, a dropped connection, several lamps at once. One restart seen,
+  directly after saving a setting via `/json/cfg` while the memory was at 58 kB; cause not determined.
 
 ## Own name and appearance
 

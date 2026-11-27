@@ -190,7 +190,7 @@ De usermod met TLS kost dus ongeveer 110 kB flash en 4 kB vast RAM.
 
 ## Getest
 
-**Op de Mac (`test/run.sh`, 514 controles, met AddressSanitizer en UBSan):**
+**Op de Mac (`test/run.sh`, 530 controles, met AddressSanitizer en UBSan):**
 
 - het plan lezen, ook het echte voorbeeld en een echt antwoord van de server (chunked);
 - afgekapte en foute antwoorden: geweigerd, geen crash;
@@ -204,29 +204,36 @@ De usermod met TLS kost dus ongeveer 110 kB flash en 4 kB vast RAM.
 
 **Los gecontroleerd op de Mac:** BearSSL (de gewone versie, niet de kopie in de bibliotheek) maakt verbinding met de echte server en keurt het certificaat goed met alleen deze twee roots. Met een andere root weigert het.
 
-## Niet getest
+**Op een lamp (ESP32-C3, 52 pixels, 25 tot 27 november 2026):**
 
-- **Koppelen via de server, meer dan één lamp en langer dan vijf minuten:** op de tweede lamp (ESP32-C3)
-  gemeten op 26 november 2026. Met de dienst op de Mac over http: 30 van 30 beelden, post tot zichtbaar
+- TLS op de chip: het plan komt elke minuut over https binnen, in 3 tot 4 seconden. Van de stack van 12 kB
+  blijft ruim 6 kB ongebruikt.
+- Vrij geheugen: 150 kB in rust, 111 kB met de open koppelverbinding over https (134 kB over http), en
+  elke minuut een paar seconden 57 tot 62 kB terwijl het plan wordt opgehaald.
+- De standaardsegmenten: op een schone lamp maakt de firmware zelf 14 segmenten voor 52 pixels aan.
+- Instellingen en infopagina: instellingen gezet via de JSON-API; de infopagina toont scène, volgende
+  wissel, laatste ophaling en koppelcode.
+- Update over wifi: drie keer gedaan, de lamp kwam steeds terug met zijn instellingen.
+- Het plan volgen: een gewijzigd plan stond binnen een minuut op de lamp (oranje naar warmwit), afgelezen
+  op de infopagina.
+- Koppelen via de server: met de dienst in het eigen netwerk over http 30 van 30 beelden, post tot zichtbaar
   mediaan 48 ms (één rondje uitlezen is 47 ms, de echte vertraging ligt daaronder). Met de live dienst over
   https (Caddy, nginx): 40 van 40 beelden, mediaan 78 ms, traagste 151 ms, bij een uitleesrondje van 53 ms;
-  rechtstreeks naar de lamp op dezelfde manier 81 ms. Vrij geheugen: 150 kB zonder verbinding, 134 kB met
-  http, 111 kB met https, en elke minuut een paar seconden 57 tot 62 kB terwijl het plan wordt opgehaald.
-  Het plan kwam er in vijf minuten elke keer door. Eén herstart gezien, direct na het opslaan van een
-  instelling via `/json/cfg` terwijl het geheugen op 58 kB stond; oorzaak niet vastgesteld. Niet getest:
-  uren achter elkaar, een wegvallende verbinding, meer lampen tegelijk.
+  rechtstreeks naar de lamp op dezelfde manier 81 ms. Het plan kwam er in vijf minuten elke keer door.
 
-Alles wat een ESP32 nodig heeft:
+## Niet getest
 
-- of de TLS-verbinding op de chip lukt, hoe lang die duurt en of de stack (12 kB) genoeg is;
-- of het licht hapert tijdens het ophalen, vooral op de C3 met één kern;
-- vrij geheugen op een draaiende lamp;
-- de segmenten: kleur, helderheid, overgangen, de kaars op echte pixels;
-- de standaardsegmenten en de samenloop met een opstartpreset;
-- instellingen, infopagina en de aan/uit-knop in de webpagina;
-- het plan bewaren en teruglezen op het bestandssysteem;
-- gedrag bij een update over wifi;
-- de kleuren zelf (de RGBW-waarden uit het plan zijn op de server ook nog een aanname).
+- of het licht hapert tijdens het ophalen, vooral op de C3 met één kern (alleen cijfers gelezen, niet naar
+  de lamp gekeken);
+- de kaars op echte pixels;
+- de kleuren zelf (de RGBW-waarden uit het plan zijn op de server ook nog een aanname);
+- de aan/uit-knop in de webpagina van de lamp;
+- het plan bewaren en teruglezen op het bestandssysteem, na een stroomonderbreking;
+- de samenloop met een opstartpreset;
+- een gewone ESP32 (niet de C3): alleen gebouwd, nooit geflasht;
+- koppelen via de server: uren achter elkaar, een wegvallende verbinding, meer lampen tegelijk. Eén herstart
+  gezien, direct na het opslaan van een instelling via `/json/cfg` terwijl het geheugen op 58 kB stond;
+  oorzaak niet vastgesteld.
 
 ## Eigen naam en uiterlijk
 
