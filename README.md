@@ -1,33 +1,39 @@
 # theDomlamp
 
-De Domtoren van Utrecht als lamp voor thuis, op schaal 1:250 en uit de 3D-printer. De lamp volgt het licht
-van de echte toren: warm wit na zonsondergang, gedimd na elf uur, en een kleur als de Dom een kleur heeft.
+*English · [Nederlands](README.nl.md)*
 
-De toren zelf, live en in 3D, staat op [utrechtdom.city](https://utrechtdom.city).
+The Dom Tower of Utrecht as a lamp for your home, at 1:250 scale and off the 3D printer. The lamp follows
+the lighting of the real tower: warm white after sunset, dimmed after eleven, and a colour when the Dom
+wears one.
 
-## Wat hier staat
+The tower itself, live and in 3D, is at [utrechtdom.city](https://utrechtdom.city).
 
-| Map | Wat | Staat | Licentie |
+## What is here
+
+| Folder | What | State | Licence |
 | --- | --- | --- | --- |
-| [`firmware/`](firmware/) | WLED 16 met de usermod `domlamp`: haalt het lichtplan op en zet de zeven zones van de lamp. | Draait op twee ESP32-C3-borden. | EUPL 1.2 |
-| [`hardware/`](hardware/) | Printbestanden, onderdelenlijst en bouwplan. | Volgt. Het ontwerp (mk2) is getekend, nog niet geprint. | CC BY-NC-SA 4.0 |
+| [`firmware/`](firmware/) | WLED 16 with the `domlamp` usermod: fetches the lighting plan and sets the lamp's seven zones. | Runs on two ESP32-C3 boards. | EUPL 1.2 |
+| [`hardware/`](hardware/) | Print files, bill of materials and build guide. | To follow. The design (mk2) is drawn, not printed yet. | CC BY-NC-SA 4.0 |
 
-## Zelf bouwen
+The documentation inside the folders is in Dutch; code, comments and commit messages are in English.
 
-Nu kan alleen de firmware: zie [`firmware/README.md`](firmware/README.md) voor bouwen, flashen en de
-instellingen. Je hebt een ESP32 of ESP32-C3 nodig en een ledstrip met RGBW-leds (SK6812). De printbestanden
-komen in `hardware/` zodra een proefprint is gelukt.
+## Build it yourself
 
-## Licenties, kort
+For now only the firmware: see [`firmware/README.md`](firmware/README.md) (Dutch) for building, flashing
+and the settings. You need an ESP32 or ESP32-C3 and an RGBW LED strip (SK6812). The print files will appear
+in `hardware/` once a test print has succeeded.
 
-- **Firmware:** [EUPL 1.2](LICENSES/EUPL-1.2.txt), dezelfde licentie als WLED. Gebruiken, aanpassen en
-  verkopen mag; wie een aangepaste versie verspreidt, deelt de bron onder dezelfde licentie.
-- **Ontwerp van de lamp** (alles in `hardware/`): de nieuwste versie staat onder
-  [CC BY-NC-SA 4.0](LICENSES/CC-BY-NC-SA-4.0.txt). Printen, aanpassen en delen mag; verkopen niet.
-  Komt er een volgende versie (mk), dan komt de vorige vrij onder
-  [CC BY-SA 4.0](LICENSES/CC-BY-SA-4.0.txt) en mag die ook verkocht worden.
-- **De naam** theDomlamp en het beeldmerk vallen niet onder deze licenties.
+## Licences, in short
 
-De volledige regeling staat in [`LICENSE.md`](LICENSE.md). Meedoen: [`CONTRIBUTING.md`](CONTRIBUTING.md).
+- **Firmware:** [EUPL 1.2](LICENSES/EUPL-1.2.txt), the same licence as WLED. You may use, change and sell
+  it; if you distribute a changed version, you share its source under the same licence.
+- **The lamp's design** (everything in `hardware/`): the newest version is under
+  [CC BY-NC-SA 4.0](LICENSES/CC-BY-NC-SA-4.0.txt). You may print it, change it and share your version;
+  you may not sell it. When a next version (mk) comes out, the one before it is released under
+  [CC BY-SA 4.0](LICENSES/CC-BY-SA-4.0.txt) and may be sold as well.
+- **The name** theDomlamp and its logo are not covered by these licences.
+
+The full terms are in [`LICENSE.md`](LICENSE.md) (Dutch). Taking part: [`CONTRIBUTING.md`](CONTRIBUTING.md)
+(Dutch).
 
 Made by don carrelion in dediepte.
