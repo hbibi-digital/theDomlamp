@@ -1,20 +1,22 @@
-# Meedoen
+# Taking part
 
-Verbeteringen zijn welkom: een fout in de firmware, een beter printbaar onderdeel, een heldere stap in het
-bouwplan. Open een issue of een pull request.
+*English · [Nederlands](CONTRIBUTING.nl.md)*
 
-## Waar je mee akkoord gaat
+Improvements are welcome: a bug in the firmware, a part that prints better, a clearer step in the build
+guide. Open an issue or a pull request.
 
-Door een bijdrage in te sturen verklaar je dat het je eigen werk is, of dat je het onder de licentie
-hieronder mag indienen, en dat je het onder die licentie beschikbaar stelt:
+## What you agree to
 
-- **Firmware (`firmware/`):** EUPL 1.2 of later.
-- **Ontwerp van de lamp (`hardware/`):** CC BY-NC-SA 4.0, en ook CC BY-SA 4.0. Dat tweede is nodig omdat
-  elke versie van het ontwerp vrijkomt onder CC BY-SA 4.0 zodra de volgende is uitgebracht (zie
-  `LICENSE.md`); zonder jouw toestemming vooraf zou jouw bijdrage dat tegenhouden.
+By sending in a contribution you state that it is your own work, or that you may submit it under the
+licence below, and that you make it available under that licence:
 
-## Praktisch
+- **Firmware (`firmware/`):** EUPL 1.2 or later.
+- **The lamp's design (`hardware/`):** CC BY-NC-SA 4.0, and CC BY-SA 4.0 as well. The second is needed
+  because every version of the design is set free under CC BY-SA 4.0 as soon as the next one has been
+  released (see `LICENSE.md`); without your permission in advance your contribution would hold that up.
 
-- Code en commitberichten in het Engels; de documentatie is Nederlands.
-- Firmware: `sh firmware/test/run.sh` moet slagen (de test van de kern, zonder hardware).
-- Beschrijf wat je hebt getest en waarop, en wat niet.
+## In practice
+
+- Code and commit messages in English; documentation in English, with the Dutch version beside it.
+- Firmware: `sh firmware/test/run.sh` has to pass (the test of the core, without hardware).
+- Describe what you tested and on what, and what you did not.

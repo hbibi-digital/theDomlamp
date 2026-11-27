@@ -1,63 +1,65 @@
-# Firmware van theDomlamp
+# Firmware of theDomlamp
 
-De lamp draait gewone WLED 16.0.1 met één eigen usermod: `domlamp`.
-De usermod haalt elke minuut het lichtplan op (`https://utrechtdom.city/api/licht`) en zet de zeven zones van de lamp.
-Al het andere is WLED zelf: wifi instellen, de webpagina, updates, de stroomgrens.
+*English · [Nederlands](README.nl.md)*
 
-De firmware draait op twee ESP32-C3-borden (sinds 25 november 2026). Wat wel en niet is getest staat onderaan.
+The lamp runs plain WLED 16.0.1 with one usermod of its own: `domlamp`.
+The usermod fetches the light plan every minute (`https://utrechtdom.city/api/licht`) and sets the seven zones of the lamp.
+Everything else is WLED itself: setting up wifi, the web page, updates, the current limit.
 
-## Wat er in deze map staat
+The firmware runs on two ESP32-C3 boards (since 25 November 2026). What has and has not been tested is at the bottom.
 
-| Pad | Wat |
+## What is in this directory
+
+| Path | What |
 | --- | --- |
-| `usermod_domlamp/usermod_domlamp.cpp` | De WLED-kant: segmenten, instellingen, infopagina. |
-| `usermod_domlamp/domlamp_core.*` | De beslissingen: plan lezen, scène kiezen, kaars, terugval. Gewoon C++, zonder Arduino. |
-| `usermod_domlamp/domlamp_fetch.*` | Ophalen over HTTPS, in een eigen taak. |
-| `usermod_domlamp/domlamp_link.*` | Koppelen via de server: de open verbinding naar de doorgeefdienst, in een eigen taak. |
-| `usermod_domlamp/domlamp_net.h` | De TLS-bibliotheek en haar instellingen, gedeeld door ophalen en koppelen. |
-| `usermod_domlamp/domlamp_certs.h` | De twee rootcertificaten van Let's Encrypt. |
-| `usermod_domlamp/library.json` | Maakt van de map een WLED-usermod (zo wil WLED 16 het). |
-| `platformio_override.ini` | De bouwomgevingen `domlamp_esp32` en `domlamp_esp32c3`. |
-| `build.sh` | Haalt WLED op (buiten deze repo) en bouwt. |
-| `test/` | Test van de kern op de Mac, zonder hardware. |
+| `usermod_domlamp/usermod_domlamp.cpp` | The WLED side: segments, settings, info page. |
+| `usermod_domlamp/domlamp_core.*` | The decisions: reading the plan, choosing the scene, candle, fallback. Plain C++, without Arduino. |
+| `usermod_domlamp/domlamp_fetch.*` | Fetching over HTTPS, in a task of its own. |
+| `usermod_domlamp/domlamp_link.*` | Linking via the server: the open connection to the relay service, in a task of its own. |
+| `usermod_domlamp/domlamp_net.h` | The TLS library and its settings, shared by fetching and linking. |
+| `usermod_domlamp/domlamp_certs.h` | The two root certificates of Let's Encrypt. |
+| `usermod_domlamp/library.json` | Turns the directory into a WLED usermod (this is how WLED 16 wants it). |
+| `platformio_override.ini` | The build environments `domlamp_esp32` and `domlamp_esp32c3`. |
+| `build.sh` | Fetches WLED (outside this repo) and builds. |
+| `test/` | Test of the core on the Mac, without hardware. |
 
-## Bouwen
+## Building
 
-Nodig: git, node/npm en PlatformIO (`uv tool install platformio`).
+Required: git, node/npm and PlatformIO (`uv tool install platformio`).
 
 ```sh
 ./build.sh                    # ESP32, 4 MB
 ./build.sh domlamp_esp32c3    # ESP32-C3 SuperMini, data op GPIO 10
 ```
 
-Het script kloont WLED `v16.0.1` naar `~/.cache/domlamp-fw/WLED` (of naar `$DOMLAMP_WLED_DIR`).
-Het legt een symlink `usermods/domlamp` naar deze map en kopieert `platformio_override.ini`.
-De firmware komt in `build/<omgeving>.bin`. Die map staat in `.gitignore`.
+The script clones WLED `v16.0.1` to `~/.cache/domlamp-fw/WLED` (or to `$DOMLAMP_WLED_DIR`).
+It creates a symlink `usermods/domlamp` to this directory and copies `platformio_override.ini`.
+The firmware ends up in `build/<omgeving>.bin`. That directory is in `.gitignore`.
 
-## Flashen
+## Flashing
 
-- **Eerste keer, via USB:** `./build.sh domlamp_esp32 -t upload --upload-port /dev/cu.usbserial-XXXX`.
-  Dat zet ook de bootloader en de partitietabel erop.
-- **Daarna, of op een bord waar al WLED op staat:** in WLED naar *Config → Security & Updates → Manual OTA Update* en `build/domlamp_esp32.bin` kiezen.
-  De instellingen blijven dan staan.
-- De Dig2Go heeft al WLED. Of een update vanaf díe versie naar 16.0.1 zonder wissen goed gaat is niet geprobeerd.
+- **First time, via USB:** `./build.sh domlamp_esp32 -t upload --upload-port /dev/cu.usbserial-XXXX`.
+  That also writes the bootloader and the partition table.
+- **After that, or on a board that already has WLED on it:** in WLED go to *Config → Security & Updates → Manual OTA Update* and choose `build/domlamp_esp32.bin`.
+  The settings are then kept.
+- The Dig2Go already has WLED. Whether an update from that version to 16.0.1 goes well without erasing has not been tried.
 
-## Eerste instellingen in WLED
+## First settings in WLED
 
-1. Wifi: de lamp start als toegangspunt `WLED-AP`. Kies daar je netwerk.
-2. *Config → LED Preferences*: type SK6812 RGBW, het aantal pixels, de datapin.
-   De bouw zet als begin: SK6812 RGBW, 52 pixels, stroomgrens 2500 mA.
-   Datapin: GPIO 16 op de ESP32-bouw (de standaard van WLED), GPIO 10 op de C3-bouw.
-   Zet *Auto-calculate W channel from RGB* (en *Auto-calculate white* bij de strip) op **None**. Het plan stuurt het wit zelf.
-3. *Config → Time & Macros*: NTP staat in deze bouw al aan, tijdzone Midden-Europa. Controleer of de klok klopt.
-4. Laat de overgangsstijl van WLED (blending) op *Fade* staan. Met een andere stijl ziet de kaars er anders uit.
+1. Wifi: the lamp starts as access point `WLED-AP`. Choose your network there.
+2. *Config → LED Preferences*: type SK6812 RGBW, the number of pixels, the data pin.
+   The build sets as a start: SK6812 RGBW, 52 pixels, current limit 2500 mA.
+   Data pin: GPIO 16 on the ESP32 build (the WLED default), GPIO 10 on the C3 build.
+   Set *Auto-calculate W channel from RGB* (and *Auto-calculate white* at the strip) to **None**. The plan drives the white itself.
+3. *Config → Time & Macros*: NTP is already on in this build, time zone Central Europe. Check that the clock is right.
+4. Leave the transition style of WLED (blending) on *Fade*. With another style the candle looks different.
 
-## Segmenten: welke pixel bij welke zone
+## Segments: which pixel belongs to which zone
 
-De strip loopt aan één kant omhoog en aan de andere kant omlaag. Elke hoogte heeft dus twee pixels.
-Daarom krijgt elke zone standaard **twee segmenten**:
+The strip runs up on one side and down on the other side. Each height therefore has two pixels.
+That is why each zone gets **two segments** by default:
 
-| Zone | Segment omhoog | Segment omlaag |
+| Zone | Segment up | Segment down |
 | --- | --- | --- |
 | voet | 0 | 13 |
 | eerste_vierkant | 1 | 12 |
@@ -67,171 +69,171 @@ Daarom krijgt elke zone standaard **twee segmenten**:
 | lantaarn | 5 | 8 |
 | dak | 6 | 7 |
 
-- De usermod zet alleen de **eerste kleur** en de **helderheid** (opacity) van die segmenten.
-  Welke pixels in een segment zitten bepaal jij in WLED.
-- Heeft WLED nog maar één segment, dan maakt de usermod er bij het opstarten veertien, gelijk verdeeld. Dat is alleen een begin.
-- Tel daarna op de echte strip en zet per segment *Start* en *Stop*.
-  Een pixel ter hoogte van een tussenschot laat je buiten elk segment. Die blijft uit.
-- **Bewaar de segmenten als preset en kies die preset bij *Apply preset at boot*.**
-  WLED onthoudt segmenten alleen in presets. Zonder dat zijn ze na een herstart weg.
-- Bestaat een segment niet, dan slaat de usermod het over. Er gaat niets stuk.
-- Liever zeven segmenten? Zet *two-segments-per-zone* uit. Dan hoort zone 1–7 bij segment 0–6.
-  De twee kanten breng je dan samen met een `ledmap.json` van WLED.
+- The usermod sets only the **first colour** and the **brightness** (opacity) of those segments.
+  Which pixels are in a segment is up to you in WLED.
+- If WLED has only one segment so far, the usermod creates fourteen at startup, evenly divided. That is only a start.
+- After that, count on the real strip and set *Start* and *Stop* per segment.
+  A pixel at the height of a partition is left outside every segment. It stays off.
+- **Save the segments as a preset and choose that preset at *Apply preset at boot*.**
+  WLED remembers segments only in presets. Without that they are gone after a restart.
+- If a segment does not exist, the usermod skips it. Nothing breaks.
+- Prefer seven segments? Turn *two-segments-per-zone* off. Then zone 1–7 belongs to segment 0–6.
+  You then bring the two sides together with a `ledmap.json` of WLED.
 
-De volgorde omhoog/omlaag is een aanname. Loopt jouw strip anders, verwissel dan de bereiken van de segmenten.
+The up/down order is an assumption. If your strip runs differently, swap the ranges of the segments.
 
-## Instellingen van de usermod
+## Settings of the usermod
 
-*Config → Usermods → Domlamp.* (de usermod heet in de instellingen en in de JSON-API nog `Domlamp`; hernoemen zou bestaande lampen en presets breken)
+*Config → Usermods → Domlamp.* (in the settings and in the JSON API the usermod is still called `Domlamp`; renaming would break existing lamps and presets)
 
-| Veld | Standaard | Betekenis |
+| Field | Default | Meaning |
 | --- | --- | --- |
-| `enabled` | aan | De Domtoren volgen. |
-| `url` | `https://utrechtdom.city/api/licht` | Waar het plan staat. `http://` mag ook (voor een proef in huis). `https` alleen op poort 443. |
-| `interval` | 0 | Seconden tussen twee keer ophalen. 0 = wat de server vraagt (`volgende_s`, nu 60). |
-| `verify-certificate` | aan | Het certificaat van de server controleren. |
-| `first-segment` | 0 | Het segment van de voet. |
-| `two-segments-per-zone` | aan | Zie hierboven. |
-| `create-segments` | aan | Segmenten maken als WLED er maar één heeft. |
-| `fallback-on` / `fallback-off` | 17:00 / 23:00 | Warm wit zonder plan, lokale tijd. Mag over middernacht. Gelijke tijden = altijd aan. |
-| `fallback-level` | 255 | Helderheid van dat warme wit. |
-| `store-plan-hours` | 6 | Hoe vaak het plan hoogstens naar flash gaat. 0 = nooit. |
+| `enabled` | on | Follow the Dom Tower. |
+| `url` | `https://utrechtdom.city/api/licht` | Where the plan is. `http://` is also allowed (for a trial at home). `https` only on port 443. |
+| `interval` | 0 | Seconds between two fetches. 0 = what the server asks for (`volgende_s`, currently 60). |
+| `verify-certificate` | on | Verify the certificate of the server. |
+| `first-segment` | 0 | The segment of the base. |
+| `two-segments-per-zone` | on | See above. |
+| `create-segments` | on | Create segments if WLED has only one. |
+| `fallback-on` / `fallback-off` | 17:00 / 23:00 | Warm white without a plan, local time. May cross midnight. Equal times = always on. |
+| `fallback-level` | 255 | Brightness of that warm white. |
+| `store-plan-hours` | 6 | How often at most the plan goes to flash. 0 = never. |
 
-## Zelf aan de lamp zitten
+## Changing the lamp yourself
 
-- **De hoofdhelderheid en de aan/uit-knop van WLED zijn van jou.** De usermod komt daar niet aan. Dimmen kan dus altijd.
-- **De usermod schrijft alleen als de scène verandert.** Niet elke minuut.
-  Verander je met de hand een kleur, dan blijft die staan tot de volgende scènewissel van de toren. Dat zijn er een paar per dag.
-- **Wil je dat het blijft staan, zet het volgen dan uit.** Dat kan op drie manieren:
-  - de knop bij *Dom tower* op de infopagina;
-  - het vinkje `enabled` in de instellingen (dat is ook de stand na een herstart);
-  - in een preset of via de JSON-API: `{"Domlamp":{"enabled":false}}`, en `true` om weer te volgen.
-- Zet je het volgen weer aan, dan toont de lamp meteen de scène van dat moment.
-- Een preset die je bewaart onthoudt ook of het volgen aan stond.
+- **The master brightness and the on/off button of WLED are yours.** The usermod does not touch them. Dimming is therefore always possible.
+- **The usermod writes only when the scene changes.** Not every minute.
+  If you change a colour by hand, it stays until the next scene change of the tower. There are a few of those per day.
+- **If you want it to stay, turn following off.** That can be done in three ways:
+  - the button at *Dom tower* on the info page;
+  - the checkbox `enabled` in the settings (that is also the state after a restart);
+  - in a preset or via the JSON API: `{"Domlamp":{"enabled":false}}`, and `true` to follow again.
+- If you turn following back on, the lamp immediately shows the scene of that moment.
+- A preset that you save also remembers whether following was on.
 
-## Koppelen via de server (proef)
+## Linking via the server (trial)
 
-Gebouwd en op de tweede lamp gemeten op 26 november 2026; de dienst draait live (zie "Niet getest" voor wat openstaat).
+Built and measured on the second lamp on 26 November 2026; the service runs live (see "Not tested" for what is still open).
 
-Met de instelling `link-url` (leeg = uit; bedoeld: `https://utrechtdom.city/api/koppel`) houdt de lamp één
-verbinding open naar de doorgeefdienst (`web/deploy/koppel/koppel.py`). Een browser die de code van de lamp
-kent, zet daar zijn zones neer; de lamp toont ze met een overgang van 120 ms en laat zijn segmenten 12 s
-met rust na het laatste beeld, net als bij de directe koppeling. Daarna volgt hij weer de Domtoren.
+With the setting `link-url` (empty = off; intended: `https://utrechtdom.city/api/koppel`) the lamp keeps one
+connection open to the relay service (`web/deploy/koppel/koppel.py`). A browser that knows the code of the lamp
+puts its zones there; the lamp shows them with a transition of 120 ms and leaves its segments alone for 12 s
+after the last frame, just as with the direct link. After that it follows the Dom Tower again.
 
-- De code (`link-code`, acht tekens) maakt de lamp zelf bij het eerste gebruik en staat op de infopagina
-  bij "Dom link code", met de toestand van de verbinding en het aantal beelden.
-- De verbinding loopt in een eigen taak (`domlamp_link.cpp`), met dezelfde TLS-bibliotheek en
-  certificaatcontrole als het ophalen van het plan (`domlamp_net.h`). Over https houdt hij naar schatting
-  45 kB geheugen vast zolang hij open staat; hij begint er niet aan onder 70 kB vrij.
-- Valt de verbinding weg, dan probeert de lamp het opnieuw na 5 s, oplopend tot 60 s.
-- De lamp vraagt de stroom op met HTTP/1.0, zodat het antwoord niet in stukken (chunks) komt.
+- The code (`link-code`, eight characters) is created by the lamp itself on first use and is shown on the info page
+  at "Dom link code", with the state of the connection and the number of frames.
+- The connection runs in a task of its own (`domlamp_link.cpp`), with the same TLS library and
+  certificate verification as fetching the plan (`domlamp_net.h`). Over https it holds an estimated
+  45 kB of memory for as long as it is open; it does not start below 70 kB free.
+- If the connection drops, the lamp tries again after 5 s, increasing to 60 s.
+- The lamp requests the stream with HTTP/1.0, so that the response does not arrive in pieces (chunks).
 
-## Overgangen
+## Transitions
 
-- `vervagen`: alle zones tegelijk, in `duur_s` seconden.
-- `kaars_aan`: zone na zone, van het dak naar de voet. Elke zone krijgt een zevende van de tijd.
-- `kaars_uit`: zone na zone, van de voet naar het dak.
-- De overgang uit het plan geldt alleen als de lamp de wissel binnen 90 seconden meemaakt.
-  Start de lamp later op, dan vervaagt hij in 2 seconden naar de juiste scène.
+- `vervagen`: all zones at once, in `duur_s` seconds.
+- `kaars_aan`: zone after zone, from the roof to the base. Each zone gets a seventh of the time.
+- `kaars_uit`: zone after zone, from the base to the roof.
+- The transition from the plan applies only if the lamp experiences the change within 90 seconds.
+  If the lamp starts up later, it fades to the right scene in 2 seconds.
 
-## Zonder internet
+## Without internet
 
-- De lamp volgt het laatste plan op zijn eigen klok. Een plan loopt 36 uur vooruit.
-- Het plan gaat hoogstens eens per 6 uur naar flash (ongeveer 0,6 kB, vier keer per dag). Dat slijt het geheugen niet merkbaar.
-  Na een herstart gebruikt de lamp dat plan, **als hij de tijd weet**. Zonder internet en zonder klok kan dat niet.
-- Is het plan op, of was er nooit een: warm wit (alleen het W-kanaal) tussen `fallback-on` en `fallback-off`.
-- Weet de lamp de tijd niet, dan staat hij warm wit **aan**. Een lamp die donker blijft lijkt kapot.
-- Na een mislukte poging wacht de lamp steeds twee keer zo lang, tot hoogstens 15 minuten.
+- The lamp follows the last plan on its own clock. A plan runs 36 hours ahead.
+- The plan goes to flash at most once per 6 hours (about 0.6 kB, four times a day). That does not noticeably wear the memory.
+  After a restart the lamp uses that plan, **if it knows the time**. Without internet and without a clock that is not possible.
+- If the plan has run out, or there never was one: warm white (only the W channel) between `fallback-on` and `fallback-off`.
+- If the lamp does not know the time, it is warm white **on**. A lamp that stays dark looks broken.
+- After a failed attempt the lamp waits twice as long each time, up to at most 15 minutes.
 
-## De klok
+## The clock
 
-- De lamp gebruikt de klok van WLED (NTP).
-- Bij elk plan vergelijkt hij die met `tijd` van de server. Meer dan 2 minuten verschil staat op de infopagina (*Dom clock*).
-  De lamp blijft dan zijn eigen klok volgen. Een verschil kan ook betekenen dat de server het plan niet meer ververst.
-- Heeft WLED geen klok, dan neemt de lamp `tijd` van de server over. Dat kan alleen als `verify-certificate` uit staat of de URL `http://` is: voor de controle van het certificaat is de datum nodig.
+- The lamp uses the clock of WLED (NTP).
+- With each plan it compares that with `tijd` from the server. A difference of more than 2 minutes is shown on the info page (*Dom clock*).
+  The lamp then keeps following its own clock. A difference can also mean that the server no longer refreshes the plan.
+- If WLED has no clock, the lamp takes over `tijd` from the server. That is only possible if `verify-certificate` is off or the URL is `http://`: verifying the certificate requires the date.
 
-## Certificaat
+## Certificate
 
-WLED 16 wordt gebouwd op een framework waarin TLS is uitgezet. Daarom zit er een eigen TLS-bibliotheek bij: BearSSL, via `ESP_SSLClient` 3.1.3.
+WLED 16 is built on a framework in which TLS is turned off. That is why it comes with a TLS library of its own: BearSSL, via `ESP_SSLClient` 3.1.3.
 
-- **Keuze: het certificaat wordt gecontroleerd**, tegen de twee roots van Let's Encrypt (ISRG Root X1 en X2). Die zitten in de firmware (2,7 kB).
-- **Het risico:** stapt de server over op een andere uitgever, dan weigert de lamp het plan. Caddy kan dat zelf doen (terugval op ZeroSSL).
-  Je ziet dan een fout op de infopagina en de lamp valt terug op het oude plan en daarna op warm wit.
-  Oplossing: `verify-certificate` uitzetten, of nieuwe firmware met de juiste root.
-- Staat de controle uit, dan is de verbinding wel versleuteld maar kan iemand op het netwerk zich voordoen als de server.
-- De roots verlopen in 2035 en 2040.
-- Kosten, gemeten in de bouw: zie *Maten*. Tijdens het ophalen kost het ongeveer 45 kB werkgeheugen, een paar seconden per minuut. Dat laatste is geschat, niet gemeten.
+- **Choice: the certificate is verified**, against the two roots of Let's Encrypt (ISRG Root X1 and X2). They are in the firmware (2.7 kB).
+- **The risk:** if the server switches to another issuer, the lamp refuses the plan. Caddy can do that by itself (fallback to ZeroSSL).
+  You then see an error on the info page and the lamp falls back to the old plan and after that to warm white.
+  Solution: turn `verify-certificate` off, or new firmware with the right root.
+- If verification is off, the connection is still encrypted but someone on the network can impersonate the server.
+- The roots expire in 2035 and 2040.
+- Cost, measured in the build: see *Sizes*. During fetching it costs about 45 kB of working memory, a few seconds per minute. The latter is estimated, not measured.
 
-## Infopagina
+## Info page
 
-Onder *Info* in WLED:
+Under *Info* in WLED:
 
-- *Dom tower*: de knop voor volgen aan/uit.
-- *Dom scene*: de scène nu, en waar die vandaan komt (plan, bewaard plan, terugval).
-- *Dom next*: de volgende wissel.
-- *Dom last fetch*: hoe lang geleden, en hoe lang het duurde.
-- *Dom error*: de laatste fout, als die er is.
-- *Dom clock*: alleen als de klok meer dan 2 minuten afwijkt.
-- *Dom fetch stack*: hoeveel stack de ophaaltaak overhield. Handig bij de eerste proef op hardware.
+- *Dom tower*: the button for following on/off.
+- *Dom scene*: the current scene, and where it comes from (plan, stored plan, fallback).
+- *Dom next*: the next change.
+- *Dom last fetch*: how long ago, and how long it took.
+- *Dom error*: the last error, if there is one.
+- *Dom clock*: only if the clock is off by more than 2 minutes.
+- *Dom fetch stack*: how much stack the fetch task had left. Useful for the first trial on hardware.
 
-## Maten (uit de bouw, WLED 16.0.1, 4 MB flash, app-partitie 1 572 864 bytes)
+## Sizes (from the build, WLED 16.0.1, 4 MB flash, app partition 1 572 864 bytes)
 
-| Bouw | Flash gebruikt | Vrij | RAM (statisch) |
+| Build | Flash used | Free | RAM (static) |
 | --- | --- | --- | --- |
-| WLED kaal, ESP32 (`esp32dev`) | 1 297 849 (82,5 %) | 275 015 | 81 552 |
-| theDomlamp, ESP32 | 1 407 089 (89,5 %) | 165 775 | 85 632 |
-| WLED kaal, ESP32-C3 (`esp32c3dev`) | 1 264 840 (80,4 %) | 308 024 | 71 768 |
-| theDomlamp, ESP32-C3 | 1 375 494 (87,5 %) | 197 370 | 75 848 |
+| Bare WLED, ESP32 (`esp32dev`) | 1 297 849 (82.5%) | 275 015 | 81 552 |
+| theDomlamp, ESP32 | 1 407 089 (89.5%) | 165 775 | 85 632 |
+| Bare WLED, ESP32-C3 (`esp32c3dev`) | 1 264 840 (80.4%) | 308 024 | 71 768 |
+| theDomlamp, ESP32-C3 | 1 375 494 (87.5%) | 197 370 | 75 848 |
 
-De usermod met TLS kost dus ongeveer 110 kB flash en 4 kB vast RAM.
-"RAM" is hier wat de linker vastlegt, niet het vrije geheugen op een draaiende lamp. Dat is niet gemeten.
+The usermod with TLS therefore costs about 110 kB of flash and 4 kB of fixed RAM.
+"RAM" here is what the linker allocates, not the free memory on a running lamp. That has not been measured.
 
-## Getest
+## Tested
 
-**Op de Mac (`test/run.sh`, 514 controles, met AddressSanitizer en UBSan):**
+**On the Mac (`test/run.sh`, 514 checks, with AddressSanitizer and UBSan):**
 
-- het plan lezen, ook het echte voorbeeld en een echt antwoord van de server (chunked);
-- afgekapte en foute antwoorden: geweigerd, geen crash;
-- welke scène wanneer geldt, en wanneer het plan op is;
-- de kaars, vergeleken met `candle()` uit de web-app;
-- de terugval-tijden, ook over middernacht;
-- wachttijden na fouten, URL's lezen;
-- het plan in- en uitpakken voor flash, met beschadigde bytes.
+- reading the plan, including the real example and a real response from the server (chunked);
+- truncated and wrong responses: refused, no crash;
+- which scene applies when, and when the plan has run out;
+- the candle, compared with `candle()` from the web app;
+- the fallback times, including across midnight;
+- waiting times after errors, reading URLs;
+- packing and unpacking the plan for flash, with damaged bytes.
 
-**Gecompileerd:** beide omgevingen bouwen zonder fouten en zonder waarschuwingen in de eigen code.
+**Compiled:** both environments build without errors and without warnings in the project's own code.
 
-**Los gecontroleerd op de Mac:** BearSSL (de gewone versie, niet de kopie in de bibliotheek) maakt verbinding met de echte server en keurt het certificaat goed met alleen deze twee roots. Met een andere root weigert het.
+**Checked separately on the Mac:** BearSSL (the regular version, not the copy in the library) connects to the real server and accepts the certificate with only these two roots. With another root it refuses.
 
-## Niet getest
+## Not tested
 
-- **Koppelen via de server, meer dan één lamp en langer dan vijf minuten:** op de tweede lamp (ESP32-C3)
-  gemeten op 26 november 2026. Met de dienst op de Mac over http: 30 van 30 beelden, post tot zichtbaar
-  mediaan 48 ms (één rondje uitlezen is 47 ms, de echte vertraging ligt daaronder). Met de live dienst over
-  https (Caddy, nginx): 40 van 40 beelden, mediaan 78 ms, traagste 151 ms, bij een uitleesrondje van 53 ms;
-  rechtstreeks naar de lamp op dezelfde manier 81 ms. Vrij geheugen: 150 kB zonder verbinding, 134 kB met
-  http, 111 kB met https, en elke minuut een paar seconden 57 tot 62 kB terwijl het plan wordt opgehaald.
-  Het plan kwam er in vijf minuten elke keer door. Eén herstart gezien, direct na het opslaan van een
-  instelling via `/json/cfg` terwijl het geheugen op 58 kB stond; oorzaak niet vastgesteld. Niet getest:
-  uren achter elkaar, een wegvallende verbinding, meer lampen tegelijk.
+- **Linking via the server, more than one lamp and longer than five minutes:** measured on the second lamp (ESP32-C3)
+  on 26 November 2026. With the service on the Mac over http: 30 of 30 frames, post to visible
+  median 48 ms (one read-out round is 47 ms, the real delay is below that). With the live service over
+  https (Caddy, nginx): 40 of 40 frames, median 78 ms, slowest 151 ms, with a read-out round of 53 ms;
+  directly to the lamp in the same way 81 ms. Free memory: 150 kB without a connection, 134 kB with
+  http, 111 kB with https, and every minute for a few seconds 57 to 62 kB while the plan is being fetched.
+  The plan came through every time in five minutes. One restart seen, directly after saving a
+  setting via `/json/cfg` while the memory was at 58 kB; cause not determined. Not tested:
+  hours on end, a dropped connection, several lamps at once.
 
-Alles wat een ESP32 nodig heeft:
+Everything that needs an ESP32:
 
-- of de TLS-verbinding op de chip lukt, hoe lang die duurt en of de stack (12 kB) genoeg is;
-- of het licht hapert tijdens het ophalen, vooral op de C3 met één kern;
-- vrij geheugen op een draaiende lamp;
-- de segmenten: kleur, helderheid, overgangen, de kaars op echte pixels;
-- de standaardsegmenten en de samenloop met een opstartpreset;
-- instellingen, infopagina en de aan/uit-knop in de webpagina;
-- het plan bewaren en teruglezen op het bestandssysteem;
-- gedrag bij een update over wifi;
-- de kleuren zelf (de RGBW-waarden uit het plan zijn op de server ook nog een aanname).
+- whether the TLS connection succeeds on the chip, how long it takes and whether the stack (12 kB) is enough;
+- whether the light stutters during fetching, especially on the C3 with one core;
+- free memory on a running lamp;
+- the segments: colour, brightness, transitions, the candle on real pixels;
+- the default segments and the interaction with a boot preset;
+- settings, info page and the on/off button in the web page;
+- storing the plan and reading it back on the file system;
+- behaviour during an update over wifi;
+- the colours themselves (the RGBW values from the plan are still an assumption on the server as well).
 
-## Eigen naam en uiterlijk
+## Own name and appearance
 
-- **In de build** (`platformio_override.ini`): merk "theDomlamp", product "Domtoren", adres `thedomlamp.local`, en
-  een instelnetwerk met eigen naam per lamp (`theDomlamp-` plus de laatste zes tekens van het serienummer).
-- **Op de lamp** (`ui/install.sh <adres>`): `skin.css` met de kleuren van de site voor WLED's eigen pagina's,
-  en vier presets: Volg de Domtoren, Warm wit, Oranje, Uit. Het script overschrijft de presets op de lamp.
-- Niet aangepast: het WLED-logo, de welkomstpagina en de menu's. Dat vraagt wijzigingen in WLED zelf.
-- Gezien op de lamp (25 nov 2026): naam, merk, stijlblad en presets staan erop; de presets schakelen het
-  volgen aan en uit. De kleuren van de presets en het uiterlijk in de browser zijn niet beoordeeld.
+- **In the build** (`platformio_override.ini`): brand "theDomlamp", product "Domtoren", address `thedomlamp.local`, and
+  a setup network with its own name per lamp (`theDomlamp-` plus the last six characters of the serial number).
+- **On the lamp** (`ui/install.sh <adres>`): `skin.css` with the colours of the site for WLED's own pages,
+  and four presets: Volg de Domtoren, Warm wit, Oranje, Uit. The script overwrites the presets on the lamp.
+- Not changed: the WLED logo, the welcome page and the menus. That requires changes in WLED itself.
+- Seen on the lamp (25 Nov 2026): name, brand, style sheet and presets are on it; the presets switch
+  following on and off. The colours of the presets and the appearance in the browser have not been assessed.

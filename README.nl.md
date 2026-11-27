@@ -11,14 +11,14 @@ De toren zelf, live en in 3D, staat op [utrechtdom.city](https://utrechtdom.city
 
 | Map | Wat | Staat | Licentie |
 | --- | --- | --- | --- |
-| [`firmware/`](firmware/) | WLED 16 met de usermod `domlamp`: haalt het lichtplan op en zet de zeven zones van de lamp. | Draait op twee ESP32-C3-borden. | EUPL 1.2 |
-| [`hardware/`](hardware/) | Het ontwerp van de lamp. [mk1](hardware/mk1/): printbestanden (STL) van een ontwerp in ontwikkeling, geprint maar nooit afgebouwd zoals getekend. mk2: getekend, nog niet geprint. | Nog geen bouwplan. | CC BY-NC-SA 4.0 |
+| [`firmware/`](firmware/README.nl.md) | WLED 16 met de usermod `domlamp`: haalt het lichtplan op en zet de zeven zones van de lamp. | Draait op twee ESP32-C3-borden. | EUPL 1.2 |
+| [`hardware/`](hardware/README.nl.md) | Het ontwerp van de lamp. [mk1](hardware/mk1/README.nl.md): printbestanden (STL) van een ontwerp in ontwikkeling, geprint maar nooit afgebouwd zoals getekend. mk2: getekend, nog niet geprint. | Nog geen bouwplan. | CC BY-NC-SA 4.0 |
 
 ## Zelf bouwen
 
-De firmware is klaar voor gebruik: zie [`firmware/README.md`](firmware/README.md) voor bouwen, flashen en de
+De firmware is klaar voor gebruik: zie [`firmware/README.nl.md`](firmware/README.nl.md) voor bouwen, flashen en de
 instellingen. Je hebt een ESP32 of ESP32-C3 nodig en een ledstrip met RGBW-leds (SK6812). De printbestanden
-van mk1 staan in [`hardware/mk1/`](hardware/mk1/), zonder bouwplan; die van mk2 volgen na een geslaagde proefprint.
+van mk1 staan in [`hardware/mk1/`](hardware/mk1/README.nl.md), zonder bouwplan; die van mk2 volgen na een geslaagde proefprint.
 
 ## Licenties, kort
 
@@ -30,6 +30,6 @@ van mk1 staan in [`hardware/mk1/`](hardware/mk1/), zonder bouwplan; die van mk2 
   [CC BY-SA 4.0](LICENSES/CC-BY-SA-4.0.txt) en mag die ook verkocht worden.
 - **De naam** theDomlamp en het beeldmerk vallen niet onder deze licenties.
 
-De volledige regeling staat in [`LICENSE.md`](LICENSE.md). Meedoen: [`CONTRIBUTING.md`](CONTRIBUTING.md).
+De volledige regeling staat in [`LICENSE.nl.md`](LICENSE.nl.md). Meedoen: [`CONTRIBUTING.nl.md`](CONTRIBUTING.nl.md).
 
 Made by don carrelion in dediepte.

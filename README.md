@@ -15,11 +15,11 @@ The tower itself, live and in 3D, is at [utrechtdom.city](https://utrechtdom.cit
 | [`firmware/`](firmware/) | WLED 16 with the `domlamp` usermod: fetches the lighting plan and sets the lamp's seven zones. | Runs on two ESP32-C3 boards. | EUPL 1.2 |
 | [`hardware/`](hardware/) | The lamp's design. [mk1](hardware/mk1/): print files (STL) of a design in progress, printed but never finished as drawn. mk2: drawn, not printed yet. | No build guide yet. | CC BY-NC-SA 4.0 |
 
-The documentation inside the folders is in Dutch; code, comments and commit messages are in English.
+All documentation is in English, with a Dutch version beside it (`*.nl.md`).
 
 ## Build it yourself
 
-The firmware is ready to use: see [`firmware/README.md`](firmware/README.md) (Dutch) for building, flashing
+The firmware is ready to use: see [`firmware/README.md`](firmware/README.md) for building, flashing
 and the settings. You need an ESP32 or ESP32-C3 and an RGBW LED strip (SK6812). The print files of mk1 are
 in [`hardware/mk1/`](hardware/mk1/), without a build guide; those of mk2 follow once a test print has succeeded.
 
@@ -33,7 +33,6 @@ in [`hardware/mk1/`](hardware/mk1/), without a build guide; those of mk2 follow 
   [CC BY-SA 4.0](LICENSES/CC-BY-SA-4.0.txt) and may be sold as well.
 - **The name** theDomlamp and its logo are not covered by these licences.
 
-The full terms are in [`LICENSE.md`](LICENSE.md) (Dutch). Taking part: [`CONTRIBUTING.md`](CONTRIBUTING.md)
-(Dutch).
+The full terms are in [`LICENSE.md`](LICENSE.md). Taking part: [`CONTRIBUTING.md`](CONTRIBUTING.md).
 
 Made by don carrelion in dediepte.
