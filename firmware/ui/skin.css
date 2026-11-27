@@ -1,0 +1,12 @@
+/* The Dom lamp's colours for WLED's own pages (DESIGN.md: warm black, cream, the yellow star, Utrecht red).
+   WLED loads /skin.css from the lamp when it is there; install.sh puts it there. */
+:root {
+  --c-1: #1c1612; --c-2: #27201a; --c-3: #332a22; --c-4: #40362c; --c-5: #544839; --c-6: #6b5d4b;
+  --c-8: #8f8371; --c-b: #c9bfa9; --c-c: #d8cfb9; --c-d: #e6dec9; --c-e: #f1ead6; --c-f: #f6f1dc;
+  --c-r: #d93a2b; --c-y: #f5cd2b; --c-l: #f5cd2b; --c-g: #f5cd2b;
+  --c-o: rgba(39, 32, 26, .9);
+  --c-tb: rgba(39, 32, 26, var(--t-b));
+  --c-tba: rgba(107, 93, 75, var(--t-b));
+  --c-tbh: rgba(51, 42, 34, var(--t-b));
+}
+.tab button.active { border-color: #f5cd2b; color: #f5cd2b; }

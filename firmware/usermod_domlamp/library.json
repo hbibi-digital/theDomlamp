@@ -1,0 +1,7 @@
+{
+  "name": "domlamp",
+  "build": { "libArchive": false },
+  "dependencies": {
+    "mobizt/ESP_SSLClient": "3.1.3"
+  }
+}

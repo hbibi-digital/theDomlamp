@@ -1,0 +1,21 @@
+HTTP/1.1 200 OK
+Access-Control-Allow-Origin: *
+Alt-Svc: h3=":443"; ma=2592000
+Cache-Control: no-cache
+Content-Type: application/json
+Date: Wed, 25 Nov 2026 17:58:35 GMT
+Etag: W/"6b0721c9-6d5"
+Last-Modified: Wed, 25 Nov 2026 17:58:33 GMT
+Permissions-Policy: camera=(), microphone=(self), geolocation=()
+Referrer-Policy: strict-origin-when-cross-origin
+Strict-Transport-Security: max-age=31536000; includeSubDomains; preload
+Via: 1.1 Caddy
+X-Content-Type-Options: nosniff
+X-Frame-Options: DENY
+Connection: close
+Transfer-Encoding: chunked
+
+6d5
+{"versie":1,"tijd":1795629513,"volgende_s":60,"zones":["voet","eerste_vierkant","omloop1","tweede_vierkant","omloop2","lantaarn","dak"],"nu":{"scene":"warmwit","sinds":1795621560,"zones":[[0,0,0,255,255],[0,0,0,255,255],[0,0,0,255,255],[0,0,0,255,255],[0,0,0,255,255],[90,52,0,255,255],[136,79,0,255,255]]},"plan":[{"om":1795644000,"scene":"na23_glas","overgang":"vervagen","duur_s":5,"zones":[[108,62,0,255,89],[0,0,0,255,102],[0,0,0,0,0],[0,0,0,0,0],[0,0,0,0,0],[0,0,0,0,0],[0,0,0,0,0]]},{"om":1795647600,"scene":"na23","overgang":"vervagen","duur_s":5,"zones":[[108,62,0,255,89],[0,0,0,0,0],[0,0,0,0,0],[0,0,0,0,0],[0,0,0,0,0],[0,0,0,0,0],[0,0,0,0,0]]},{"om":1795665600,"scene":"warmwit","overgang":"vervagen","duur_s":5,"zones":[[0,0,0,255,255],[0,0,0,255,255],[0,0,0,255,255],[0,0,0,255,255],[0,0,0,255,255],[90,52,0,255,255],[136,79,0,255,255]]},{"om":1795676940,"scene":"dag","overgang":"kaars_uit","duur_s":30,"zones":[[0,0,0,0,0],[0,0,0,0,0],[0,0,0,0,0],[0,0,0,0,0],[0,0,0,0,0],[0,0,0,0,0],[0,0,0,0,0]]},{"om":1795707900,"scene":"warmwit","overgang":"kaars_aan","duur_s":30,"zones":[[0,0,0,255,255],[0,0,0,255,255],[0,0,0,255,255],[0,0,0,255,255],[0,0,0,255,255],[90,52,0,255,255],[136,79,0,255,255]]},{"om":1795730400,"scene":"na23_glas","overgang":"vervagen","duur_s":5,"zones":[[108,62,0,255,89],[0,0,0,255,102],[0,0,0,0,0],[0,0,0,0,0],[0,0,0,0,0],[0,0,0,0,0],[0,0,0,0,0]]},{"om":1795734000,"scene":"na23","overgang":"vervagen","duur_s":5,"zones":[[108,62,0,255,89],[0,0,0,0,0],[0,0,0,0,0],[0,0,0,0,0],[0,0,0,0,0],[0,0,0,0,0],[0,0,0,0,0]]},{"om":1795752000,"scene":"warmwit","overgang":"vervagen","duur_s":5,"zones":[[0,0,0,255,255],[0,0,0,255,255],[0,0,0,255,255],[0,0,0,255,255],[0,0,0,255,255],[90,52,0,255,255],[136,79,0,255,255]]}]}
+0
+
