@@ -29,7 +29,7 @@ Required: git, node/npm and PlatformIO (`uv tool install platformio`).
 
 ```sh
 ./build.sh                    # ESP32, 4 MB
-./build.sh domlamp_esp32c3    # ESP32-C3 SuperMini, data op GPIO 10
+./build.sh domlamp_esp32c3    # ESP32-C3 (Seeed Studio XIAO ESP32-C3), data on GPIO 10 (pin D10)
 ```
 
 The script clones WLED `v16.0.1` to `~/.cache/domlamp-fw/WLED` (or to `$DOMLAMP_WLED_DIR`).

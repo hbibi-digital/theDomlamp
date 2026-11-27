@@ -29,7 +29,7 @@ Nodig: git, node/npm en PlatformIO (`uv tool install platformio`).
 
 ```sh
 ./build.sh                    # ESP32, 4 MB
-./build.sh domlamp_esp32c3    # ESP32-C3 SuperMini, data op GPIO 10
+./build.sh domlamp_esp32c3    # ESP32-C3 (Seeed Studio XIAO ESP32-C3), data op GPIO 10 (pen D10)
 ```
 
 Het script kloont WLED `v16.0.1` naar `~/.cache/domlamp-fw/WLED` (of naar `$DOMLAMP_WLED_DIR`).
