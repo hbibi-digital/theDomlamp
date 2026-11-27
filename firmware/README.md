@@ -48,7 +48,7 @@ The firmware ends up in `build/<omgeving>.bin`. That directory is in `.gitignore
 
 1. Wifi: the lamp starts as access point `WLED-AP`. Choose your network there.
 2. *Config → LED Preferences*: type SK6812 RGBW, the number of pixels, the data pin.
-   The build sets as a start: SK6812 RGBW, 52 pixels, current limit 2500 mA.
+   The build sets as a start: SK6812 RGBW, 52 pixels, and a current limit of 2000 mA on the C3 (where all the current runs through the board itself) and 2500 mA on the ESP32 build. By calculation 52 pixels draw about 1.0 A in warm white and 1.9 A in orange (20 mA a channel); this has not been measured.
    Data pin: GPIO 16 on the ESP32 build (the WLED default), GPIO 10 on the C3 build.
    Set *Auto-calculate W channel from RGB* (and *Auto-calculate white* at the strip) to **None**. The plan drives the white itself.
 3. *Config → Time & Macros*: NTP is already on in this build, time zone Central Europe. Check that the clock is right.
